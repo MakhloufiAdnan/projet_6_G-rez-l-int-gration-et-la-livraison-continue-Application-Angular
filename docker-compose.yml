@@ -1,0 +1,6 @@
+services:
+  front:
+    build: .
+    container_name: olympic-front
+    ports:
+      - "80:80"
