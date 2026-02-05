@@ -9,7 +9,7 @@
     "prepack": "ng build",
     "test": "ng test --watch false"
   },
-  "private": false,
+  "private": true,
   "dependencies": {
     "@angular/animations": "^20.3.7",
     "@angular/common": "^20.3.7",
