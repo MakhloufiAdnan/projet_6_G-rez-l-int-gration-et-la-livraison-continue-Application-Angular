@@ -84,7 +84,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
 
-    # Build sur main + branche de test 
+    # Build sur main + branche de test
     if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/ci-test') }}
 
     permissions:
