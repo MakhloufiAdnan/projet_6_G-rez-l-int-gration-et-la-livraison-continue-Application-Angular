@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/MakhloufiAdnan/projet_6_G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/compare/v1.0.1...v1.1.0) (2026-02-06)
+
+
+### Features
+
+* add test results for Chrome Headless in XML format ([e7bc0ac](https://github.com/MakhloufiAdnan/projet_6_G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/commit/e7bc0aceab79ad39d915a6b0d00f4a2dc0b873f0))
+
 ## [1.0.1](https://github.com/MakhloufiAdnan/projet_6_G-rez-l-int-gration-et-la-livraison-continue-Application-Angular/compare/v1.0.0...v1.0.1) (2026-02-05)
 
 
