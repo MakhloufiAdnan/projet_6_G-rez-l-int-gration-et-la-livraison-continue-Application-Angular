@@ -1,142 +1,165 @@
-# Olympic Games Starter (Angular Front-End)
+# Angular CI/CD Olympic App
 
-Welcome to **Olympic Games Starter**. This front-end application (Angular) displays Olympic-related data and provides a simple UI for navigation and visualization.
+Angular application used to practice and demonstrate **CI/CD, automated testing, containerization and release automation**.
 
-## Table of Contents
+The application displays Olympic-related data through a simple Angular interface, while the main engineering focus of this repository is the build, test and delivery workflow.
 
-1. Context  
-2. Technical Overview  
-3. Run Locally (without Docker)  
-4. Run with Docker (Compose)  
-5. Configuration  
-6. Testing  
-7. CI/CD (GitHub Actions)  
-8. Docker Images & Publishing to GHCR  
+## 🛠️ Tech Stack
 
-## 1) Context
+* Angular
+* TypeScript
+* Node.js
+* Karma
+* ChromeHeadless
+* Docker
+* Nginx
+* GitHub Actions
+* GitHub Container Registry
+* semantic-release
+* Python automation scripts
 
-This project is a training application used to practice DevOps fundamentals. The goal is to standardize the build, test, and delivery process (Docker + CI/CD) for an Angular application.
+## ⚙️ CI/CD Pipeline
 
-## 2) Technical Overview
+The GitHub Actions workflow automates the main stages of the development lifecycle.
 
-- **Front-end framework:** Angular (Node-based build).  
-- **Web server (runtime):** Nginx (the Docker image serves the production build).  
-- **Build:** multi-stage Docker build (Node build stage → Nginx runtime stage).  
-- **Port (Docker):** exposed on **80** (served by Nginx).  
-- **Test runner:** Karma + ChromeHeadless (JUnit reports enabled).
+### Test
 
-## 3) Run Locally (without Docker)
+The pipeline:
 
-### Prerequisites
+* installs project dependencies
+* executes automated tests
+* runs tests with ChromeHeadless
+* generates JUnit XML reports
+* publishes test results for CI analysis
 
-- Node.js (20+ recommended by the project requirements)
-- npm
+A Python script provides a standardized test execution workflow:
 
-### Install dependencies
+```bash
+python run-tests.py
+```
+
+Generated reports are collected under:
+
+```text
+test-results/reports/
+```
+
+### Build
+
+The application is packaged using a **multi-stage Docker build**:
+
+```text
+Node.js build stage
+        ↓
+Angular production build
+        ↓
+Nginx runtime image
+```
+
+The final container contains only the files required to serve the Angular application through Nginx.
+
+### Container Registry
+
+Docker images are automatically published to **GitHub Container Registry (GHCR)**.
+
+The pipeline supports image tags associated with branches and commits.
+
+### Release
+
+Releases from the main branch are automated with **semantic-release**.
+
+The release workflow:
+
+* analyzes commit history
+* determines the next semantic version
+* creates a GitHub Release
+* updates the changelog
+* publishes a versioned Docker image to GHCR
+
+## 🧪 Testing
+
+Unit tests are executed with:
+
+* Karma
+* ChromeHeadless
+
+Run tests locally:
+
+```bash
+npm test
+```
+
+JUnit-compatible reports are generated for CI integration.
+
+## 🐳 Docker
+
+The application uses a multi-stage Docker image.
+
+The Angular application is built during the first stage and served by **Nginx** in the runtime stage.
+
+Run the application with Docker Compose:
+
+```bash
+docker compose up -d
+```
+
+Then open:
+
+```text
+http://localhost
+```
+
+Stop the application:
+
+```bash
+docker compose down
+```
+
+## 🚀 Run Locally
+
+### Requirements
+
+* Node.js 20+
+* npm
+
+Install dependencies:
 
 ```bash
 npm ci
 ```
-Run the app (development)
+
+Start the development server:
+
 ```bash
 npm start
 ```
-Then open: http://localhost:4200
 
-Build for production
+Application:
+
+```text
+http://localhost:4200
+```
+
+Create a production build:
+
 ```bash
 npm run build
 ```
-The build output is generated in the Angular dist/ directory (exact path depends on the Angular workspace configuration).
 
-4) Run with Docker (docker compose)
-Start the application
-```bash
-docker compose up -d
-```
-Application: http://localhost
+## 📦 Releases
 
-Stop
-```bash
-docker compose down
-```
-5) Configuration
-This project does not require mandatory environment variables to start in the default configuration.
+The repository uses automated semantic versioning and GitHub Releases.
 
-If you add environment-specific settings later, keep them outside the repository (for example via CI/CD secrets or runtime configuration).
+Published container images are available through GitHub Container Registry.
 
-6) Testing
-Unit tests (local)
-```bash
-npm test
-```
-JUnit report generation
-JUnit XML reports are generated in the reports/ directory (Karma junitReporter.outputDir).
+## 📌 Project Focus
 
-Unified test script
-The repository includes a run-tests.py script that:
+This repository focuses on applying DevOps practices to an Angular application:
 
-detects the project type
-
-runs unit tests
-
-copies JUnit XML reports into ./test-results/
-
-Run:
-```bash
-python run-tests.py
-```
-Example of copied results (Angular side):
-
-test-results/reports/**/*.xml
-
-7) CI/CD (GitHub Actions)
-The CI workflow is generic: it works for this Angular repo (and can be identical on the Java/Gradle repo following the same approach).
-
-test job
-installs the required tooling (Node or Java depending on the repo)
-
-runs python run-tests.py
-
-publishes JUnit reports (XML files under test-results/**/*.xml)
-
-build job
-builds the Docker image from the Dockerfile
-
-pushes to GitHub Container Registry (GHCR) with a readable tag:
-
-branch-SHA (e.g. main-<sha>)
-
-release job
-runs on main
-
-executes semantic-release
-
-creates a GitHub Release (tag vX.Y.Z)
-
-also pushes a Docker image tagged with the semantic version: X.Y.Z
-
-8) Docker Images & Publishing to GHCR
-Image name
-The workflow pushes the image to:
-
-ghcr.io/<owner>/<repo> (computed automatically in the workflow)
-
-Published tags
-branch-SHA (e.g. ci-test-<sha>, main-<sha>)
-
-X.Y.Z (after release)
-
-GitHub prerequisites (important)
-For GHCR push + release to work, the repository must allow the GitHub Actions token:
-
-Settings → Actions → General → Workflow permissions → Read and write permissions
-
-Quality notes
-The Docker image is multi-stage (build then runtime), which keeps the final image small and focused (Nginx only).
-
-Unit tests run in ChromeHeadless and generate JUnit XML reports for CI integration.
-
-::contentReference[oaicite:0]{index=0}
-
-Test
+* automated testing
+* reproducible builds
+* Docker containerization
+* CI/CD with GitHub Actions
+* automated releases
+* container image publishing
+* CI-compatible test reporting
